@@ -1,0 +1,15 @@
+{
+  "name": "test-website",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A small static website for testing Allen onboarding executions.",
+  "type": "module",
+  "scripts": {
+    "start": "vite --host 0.0.0.0",
+    "build": "vite build",
+    "test": "node src/app.test.mjs"
+  },
+  "devDependencies": {
+    "vite": "^6.0.0"
+  }
+}
