@@ -9,6 +9,19 @@
     />
     <title>Test Website</title>
     <link rel="stylesheet" href="/src/styles.css" />
+  <script>
+    (function () {
+      try {
+        var stored = localStorage.getItem('theme');
+        var theme = (stored === 'dark' || stored === 'light')
+          ? stored
+          : (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        document.documentElement.setAttribute('data-theme', theme);
+      } catch (e) {
+        document.documentElement.setAttribute('data-theme', 'light');
+      }
+    })();
+  </script>
   </head>
   <body>
     <header class="site-header">
@@ -20,6 +33,7 @@
         <a href="#features">Features</a>
         <a href="#status">Status</a>
         <a href="#contact">Contact</a>
+        <button id="theme-toggle" type="button" aria-label="Switch to dark mode">Dark mode</button>
       </nav>
     </header>
 
