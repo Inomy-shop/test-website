@@ -1,5 +1,5 @@
 :root {
-  color-scheme: light;
+  color-scheme: light dark;
   --bg: #f7f8f5;
   --surface: #ffffff;
   --surface-muted: #eef3ef;
@@ -10,6 +10,7 @@
   --accent-dark: #095f4e;
   --warning: #b56b19;
   --shadow: 0 20px 50px rgba(29, 37, 32, 0.12);
+  --header-bg: rgba(247, 248, 245, 0.92);
   font-family:
     Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
     sans-serif;
@@ -45,7 +46,7 @@ a {
   gap: 1rem;
   padding: 1rem clamp(1rem, 4vw, 4rem);
   border-bottom: 1px solid var(--border);
-  background: rgba(247, 248, 245, 0.92);
+  background: var(--header-bg);
   backdrop-filter: blur(12px);
 }
 
@@ -301,3 +302,67 @@ input {
     min-height: auto;
   }
 }
+
+/* ─── Dark theme — OS auto (respects explicit light override) ─── */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0f1710;
+    --surface: #172019;
+    --surface-muted: #1c2a1e;
+    --text: #e4ece5;
+    --muted: #8ba38e;
+    --border: #2e3d30;
+    --accent: #2dd4a8;
+    --accent-dark: #1fb88f;
+    --warning: #e6963c;
+    --shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+    --header-bg: rgba(15, 23, 16, 0.92);
+  }
+}
+
+/* ─── Dark theme — explicit user choice (overrides OS) ─── */
+[data-theme='dark'] {
+  --bg: #0f1710;
+  --surface: #172019;
+  --surface-muted: #1c2a1e;
+  --text: #e4ece5;
+  --muted: #8ba38e;
+  --border: #2e3d30;
+  --accent: #2dd4a8;
+  --accent-dark: #1fb88f;
+  --warning: #e6963c;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+  --header-bg: rgba(15, 23, 16, 0.92);
+}
+
+/* ─── Theme toggle button ─── */
+.theme-toggle {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text);
+  cursor: pointer;
+  border-radius: 50%;
+  width: 2.25rem;
+  height: 2.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1rem;
+  padding: 0;
+  flex-shrink: 0;
+  line-height: 1;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+/* Default (light mode): ☾ visible, ☀ hidden */
+.theme-toggle [data-icon-dark] { display: none; }
+
+/* OS dark (no explicit light override): show ☀, hide ☾ */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .theme-toggle [data-icon-dark] { display: inline; }
+  :root:not([data-theme='light']) .theme-toggle [data-icon-light] { display: none; }
+}
+
+/* Explicit dark: show ☀, hide ☾ */
+[data-theme='dark'] .theme-toggle [data-icon-dark] { display: inline; }
+[data-theme='dark'] .theme-toggle [data-icon-light] { display: none; }
