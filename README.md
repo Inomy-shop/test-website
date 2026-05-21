@@ -52,7 +52,7 @@ users a realistic onboarding flow without risking important code.
 
 - `index.html`: the single-page website.
 - `src/styles.css`: responsive styling for the page.
-- `src/app.js`: readiness score helper functions and widget behavior.
+- `src/app.js`: readiness score and theme helper functions, widget behavior, and dark/light theme toggle logic.
 - `src/app.test.mjs`: lightweight Node tests for the helper functions.
 
 ## Easy Changes To Try
@@ -83,6 +83,9 @@ npm test
 3. Enter a score below `80` and click `Update`.
 4. Confirm the message changes to a warning state.
 5. Enter `80` or higher and confirm it changes back to ready.
+6. Click the **Dark mode** button in the navigation bar and confirm the page switches to a dark colour scheme.
+7. Reload the page and confirm the dark theme is still applied (localStorage persistence).
+8. Click **Light mode** to switch back.
 
 ## Example Allen Test Prompts
 
@@ -111,3 +114,27 @@ Running `npm test` should print:
 ```text
 All tests passed.
 ```
+
+## Dark Mode
+
+The site includes a light/dark theme toggle built into the top navigation bar.
+
+### Using the toggle
+
+A **"Dark mode"** / **"Light mode"** button sits in the primary navigation alongside the existing page links. Click it to switch themes instantly.
+
+### Keyboard accessibility
+
+The toggle is a native `<button>` element, so it is fully keyboard accessible:
+- **Tab** to move focus to the button
+- **Enter** or **Space** to activate it
+
+The button's `aria-label` always reflects the *target* state (e.g. "Switch to dark mode" when you are currently in light mode), so screen readers announce the action rather than the current state.
+
+### Persistence
+
+Your theme choice is saved to `localStorage` under the key `"theme"`. It persists across page reloads and browser restarts until you toggle again or clear site data.
+
+### Default (system preference)
+
+If no theme has been saved yet, the site automatically matches your operating system's colour preference via `prefers-color-scheme`. Set your OS to dark mode and the site will open in dark mode on first visit—no manual toggle needed.
