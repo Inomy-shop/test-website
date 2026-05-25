@@ -7,7 +7,8 @@ export function clampScore(value) {
 export function readinessMessage(score) {
   const clamped = clampScore(score);
   if (clamped >= 80) return 'Ready for onboarding.';
-  if (clamped >= 50) return 'Almost ready. Review the remaining setup.';
+  if (clamped >= 51) return 'Almost ready. Review the remaining setup.';
+  if (clamped === 50) return 'Right on the edge. Complete one more setup step to be ready.';
   return 'Needs attention before the first workflow.';
 }
 
