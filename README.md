@@ -48,11 +48,17 @@ After Allen starts the workflow, it should inspect this repo, make a small code
 or documentation change, run tests, and show the execution trace. This gives new
 users a realistic onboarding flow without risking important code.
 
+## Dark / Light Theme
+
+The site defaults to your operating system's color scheme. A **🌙 Dark / ☀️ Light**
+toggle button in the header lets you override it. Your explicit choice is saved
+in `localStorage` and restored on the next visit.
+
 ## What Is Inside
 
 - `index.html`: the single-page website.
-- `src/styles.css`: responsive styling for the page.
-- `src/app.js`: readiness score helper functions and widget behavior.
+- `src/styles.css`: responsive styling for the page (light and dark themes).
+- `src/app.js`: readiness score helper functions, widget behavior, and theme helpers.
 - `src/app.test.mjs`: lightweight Node tests for the helper functions.
 
 ## Easy Changes To Try
@@ -83,6 +89,9 @@ npm test
 3. Enter a score below `80` and click `Update`.
 4. Confirm the message changes to a warning state.
 5. Enter `80` or higher and confirm it changes back to ready.
+6. Click the **🌙 Dark** button in the header and confirm the page switches to dark theme.
+7. Refresh the page and confirm dark mode is remembered.
+8. Click **☀️ Light** to switch back.
 
 ## Example Allen Test Prompts
 
