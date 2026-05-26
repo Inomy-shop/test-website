@@ -1,5 +1,5 @@
 import assert from 'node:assert/strict';
-import { clampScore, readinessClass, readinessMessage } from './app.js';
+import { clampScore, readinessClass, readinessMessage, getInitialTheme } from './app.js';
 
 assert.equal(clampScore(82), 82);
 assert.equal(clampScore(-5), 0);
@@ -13,5 +13,17 @@ assert.equal(readinessMessage(12), 'Needs attention before the first workflow.')
 
 assert.equal(readinessClass(80), 'ready');
 assert.equal(readinessClass(79), 'warning');
+
+// getInitialTheme – saved value wins regardless of OS preference
+assert.equal(getInitialTheme('dark', false), 'dark');
+assert.equal(getInitialTheme('light', true), 'light');
+// no saved value – follow OS preference
+assert.equal(getInitialTheme(null, true), 'dark');
+assert.equal(getInitialTheme(null, false), 'light');
+assert.equal(getInitialTheme(undefined, true), 'dark');
+assert.equal(getInitialTheme(undefined, false), 'light');
+// unrecognised saved value – fall back to OS preference
+assert.equal(getInitialTheme('auto', true), 'dark');
+assert.equal(getInitialTheme('auto', false), 'light');
 
 console.log('All tests passed.');
