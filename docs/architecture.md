@@ -9,13 +9,13 @@ user interaction, and the testing approach.
 
 ```
 test-website/
-├── index.html          # Single-page site; all sections and the widget live here
+├── index.html          # Single-page site; all sections, widget, and theme toggle live here
 ├── package.json        # Project metadata, npm scripts, Vite dev dependency
 ├── .gitignore          # Ignores node_modules/ and dist/
 ├── src/
-│   ├── app.js          # Exported helper functions + private DOM-binding function
+│   ├── app.js          # Exported helper functions + private DOM-binding functions
 │   ├── app.test.mjs    # Node.js assertion tests (no browser or framework needed)
-│   └── styles.css      # All styles; CSS custom properties used as design tokens
+│   └── styles.css      # All styles; CSS custom properties for both light and dark theme
 └── dist/               # Build output (gitignored; produced by `npm run build`)
 ```
 
@@ -29,18 +29,30 @@ file wired to one CSS file and one JavaScript ES module.
 ### Page load
 
 1. The browser fetches `index.html`.
-2. `<link rel="stylesheet" href="/src/styles.css">` loads all styles synchronously.
-3. `<script type="module" src="/src/app.js">` loads the script as an ES module.
-4. `app.js` executes. The `typeof document !== 'undefined'` guard is `true` in a
-   browser, so `bindReadinessWidget()` is called immediately.
-5. `bindReadinessWidget` queries three elements:
+2. A small inline `<script>` in `<head>` runs **synchronously, before the first
+   paint**. It reads `localStorage.getItem('tw-theme')` and, if no valid stored
+   preference is found, falls back to `window.matchMedia('(prefers-color-scheme: dark)')`.
+   The resolved value (`'light'` or `'dark'`) is written to
+   `document.documentElement.dataset.theme`, which activates the matching CSS token
+   block immediately and prevents a flash-of-unstyled-content (FOUC).
+3. `<link rel="stylesheet" href="/src/styles.css">` loads all styles synchronously.
+4. `<script type="module" src="/src/app.js">` loads the script as an ES module.
+5. `app.js` executes. The `typeof document !== 'undefined'` guard is `true` in a
+   browser, so `bindReadinessWidget()` and `bindThemeToggle()` are both called
+   immediately.
+6. `bindReadinessWidget` queries three elements:
    - `#score-input` (the number input, HTML default value `82`)
    - `#score-button` (the Update button)
    - `#score-message` (the status paragraph)
-6. Event listeners are attached: `click` on the button, `keydown` on the input
+7. Event listeners are attached: `click` on the button, `keydown` on the input
    (fires `update()` when the pressed key is `Enter`).
-7. `update()` fires **once immediately** on bind — the widget initializes with the
+8. `update()` fires **once immediately** on bind — the widget initializes with the
    score `82` and displays "Ready for onboarding." before any user action.
+9. `bindThemeToggle` queries `#theme-toggle`, reads the current theme from
+   `document.documentElement.dataset.theme`, and sets the button's `textContent`
+   and `aria-pressed` attribute. A `click` listener on the button calls
+   `nextTheme()`, updates `dataset.theme`, refreshes the button label and
+   `aria-pressed`, and persists the new choice to `localStorage`.
 
 ### User interaction
 
@@ -79,18 +91,21 @@ clampScore()  ──→  integer in [0, 100]
 | Layer | Functions | Exported | Testable without a browser |
 | --- | --- | --- | --- |
 | Pure helpers | `clampScore`, `readinessMessage`, `readinessClass` | Yes | Yes |
+| Pure helpers | `resolveInitialTheme`, `nextTheme`, `themeButtonLabel`, `themeButtonPressed` | Yes | Yes |
 | DOM binding | `bindReadinessWidget` | No | No — requires `document` |
+| DOM binding | `bindThemeToggle` | No | No — requires `document` |
 
 The `typeof document !== 'undefined'` guard at the bottom of the file is the only
 environment branch. When the file is imported by Node for tests, the guard is
-`false` and `bindReadinessWidget` is never called, so no DOM errors occur.
+`false` and neither `bindReadinessWidget` nor `bindThemeToggle` is called, so no
+DOM errors occur.
 
-Keeping the business logic (thresholds, clamping, message strings) in pure functions
-that never touch the DOM means:
+Keeping the business logic (thresholds, clamping, message strings, theme
+transitions) in pure functions that never touch the DOM means:
 
 - The test suite runs directly in Node without a browser or jsdom.
-- Changing thresholds only requires editing the helper functions and their tests,
-  not the DOM-binding code.
+- Changing thresholds or theme-toggle behavior only requires editing the helper
+  functions and their tests, not the DOM-binding code.
 
 ---
 
@@ -106,10 +121,15 @@ framework, no browser, no DOM simulation.
 | `clampScore` | In-range integer (`82`), negative (`-5`), above-max (`128`), decimal string (`'42.4'`), non-numeric string (`'not-a-score'`) |
 | `readinessMessage` | One score per band: `90` (ready), `65` (almost), `12` (needs attention) |
 | `readinessClass` | Boundary values: `80` → `'ready'`, `79` → `'warning'` |
+| `resolveInitialTheme` | Stored `'dark'` wins over `prefersDark: false`; stored `'light'` wins over `prefersDark: true`; `null` stored falls back to system preference; invalid stored value treated as absent |
+| `nextTheme` | `'light'` → `'dark'`, `'dark'` → `'light'` |
+| `themeButtonLabel` | `'light'` → `'Switch to dark theme'`, `'dark'` → `'Switch to light theme'` |
+| `themeButtonPressed` | `'dark'` → `'true'`, `'light'` → `'false'` |
 
 **What is intentionally not tested:**
 
 - `bindReadinessWidget` — private function, requires a live browser DOM.
+- `bindThemeToggle` — private function, requires a live browser DOM.
 - CSS rendering — verified manually or by visual inspection.
 - HTML structure — static, no templating engine.
 

@@ -45,10 +45,13 @@ responsive — below 760 px the grid collapses to a single column automatically.
 
 ### Adjust colors or spacing
 
-All design tokens are CSS custom properties at the top of `src/styles.css`:
+All design tokens are CSS custom properties in `src/styles.css`. The file has two
+token blocks — one for light mode (`:root`) and one for dark mode
+(`[data-theme="dark"]`):
 
 ```css
 :root {
+  color-scheme: light;
   --bg: #f7f8f5;
   --surface: #ffffff;
   --surface-muted: #eef3ef;
@@ -58,11 +61,34 @@ All design tokens are CSS custom properties at the top of `src/styles.css`:
   --accent: #0e7c66;
   --accent-dark: #095f4e;
   --warning: #b56b19;
+  --shadow: 0 20px 50px rgba(29, 37, 32, 0.12);
+  --header-bg: rgba(247, 248, 245, 0.92);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #0f1411;
+  --surface: #161c19;
+  --surface-muted: #1d2522;
+  --text: #e8efe9;
+  --muted: #9aa9a0;
+  --border: #2a332e;
+  --accent: #4fd1ae;
+  --accent-dark: #7fe8ca;
+  --warning: #f0a85c;
+  --shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+  --header-bg: rgba(15, 20, 17, 0.92);
 }
 ```
 
-Changing a token updates every component that references it. The header, footer,
-buttons, input, and readiness-message colors all derive from these properties.
+Changing a token in `:root` updates the light theme; changing the matching token
+in `[data-theme="dark"]` updates the dark theme. All components (header, footer,
+buttons, input, readiness message, feature cards) derive their colors from these
+properties automatically.
+
+The active theme is set by adding `data-theme="light"` or `data-theme="dark"` to
+the `<html>` element — either by the inline FOUC-prevention script on page load or
+by `bindThemeToggle()` in `src/app.js` when the user clicks the toggle button.
 
 ### Change readiness score thresholds
 
@@ -117,12 +143,14 @@ errors are reported both in the terminal and in the browser console.
 
 ## Writing and updating tests
 
-Tests live in `src/app.test.mjs`. The file imports the three exported helpers and
-makes synchronous assertions using `node:assert/strict`:
+Tests live in `src/app.test.mjs`. The file imports all exported helpers — both
+the readiness helpers and the theme helpers — and makes synchronous assertions
+using `node:assert/strict`:
 
 ```js
 import assert from 'node:assert/strict';
-import { clampScore, readinessClass, readinessMessage } from './app.js';
+import { clampScore, readinessClass, readinessMessage,
+         resolveInitialTheme, nextTheme, themeButtonLabel, themeButtonPressed } from './app.js';
 
 assert.equal(clampScore(82), 82);
 // … more assertions …

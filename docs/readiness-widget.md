@@ -139,12 +139,13 @@ initializes from the HTML default value of `82` and displays
 
 ### CSS classes and colors
 
-Defined in `src/styles.css`:
+Defined in `src/styles.css`. The hex values are theme-adaptive — they resolve
+to different colors in light and dark mode via CSS custom properties:
 
-| Class | CSS custom property | Hex | Visual |
-| --- | --- | --- | --- |
-| `.score-message.ready` | `var(--accent-dark)` | `#095f4e` | Dark green — positive |
-| `.score-message.warning` | `var(--warning)` | `#b56b19` | Amber — attention needed |
+| Class | CSS custom property | Light mode | Dark mode | Visual |
+| --- | --- | --- | --- | --- |
+| `.score-message.ready` | `var(--accent-dark)` | `#095f4e` | `#7fe8ca` | Green — positive |
+| `.score-message.warning` | `var(--warning)` | `#b56b19` | `#f0a85c` | Amber — attention needed |
 
 ---
 

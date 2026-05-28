@@ -9,7 +9,7 @@ one interactive widget, and a fast test command.
 This repo renders a simple landing page for a fake "Test Website" product. The
 page has four main parts:
 
-- A header with navigation links.
+- A header with navigation links and a dark/light theme toggle.
 - A hero section that explains the repo is an Allen onboarding target.
 - A feature section with cards describing why the repo is easy to test.
 - A readiness score widget where users type a number from `0` to `100` and get
@@ -92,6 +92,10 @@ npm test
 3. Enter a score below `80` and click `Update`.
 4. Confirm the message changes to a warning state.
 5. Enter `80` or higher and confirm it changes back to ready.
+6. Click the **Switch to dark theme** button in the header.
+   Confirm the page switches to dark colors and the button label changes to
+   **Switch to light theme**.
+7. Reload the page — the dark theme should persist.
 
 ## Example Allen Test Prompts
 
