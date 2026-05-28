@@ -10,6 +10,7 @@ assert.equal(clampScore('not-a-score'), 0);
 assert.equal(readinessMessage(90), 'Ready for onboarding.');
 assert.equal(readinessMessage(65), 'Almost ready. Review the remaining setup.');
 assert.equal(readinessMessage(12), 'Needs attention before the first workflow.');
+assert.equal(readinessMessage(50), 'Right on the edge — one more check to be ready.');
 
 assert.equal(readinessClass(80), 'ready');
 assert.equal(readinessClass(79), 'warning');
