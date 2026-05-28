@@ -53,9 +53,9 @@ npm run build
 Vite bundles and minifies the site into `dist/`. Expected output:
 
 ```
-dist/index.html            ~4 kB   (gzip ~1.3 kB)
-dist/assets/index-*.css    ~4 kB   (gzip ~1.4 kB)
-dist/assets/index-*.js     ~1.5 kB (gzip ~0.75 kB)
+dist/index.html            ~4.5 kB  (gzip ~1.6 kB)
+dist/assets/index-*.css    ~4.4 kB  (gzip ~1.6 kB)
+dist/assets/index-*.js     ~2.1 kB  (gzip ~1.0 kB)
 ```
 
 The `dist/` folder is listed in `.gitignore` and is not committed to the
@@ -82,6 +82,12 @@ repository.
 8. Type **150** and click **Update**.  
    The input value is clamped to **100** and the message stays "Ready for
    onboarding." — confirming that out-of-range values are normalized.
+9. Click the **Switch to dark theme** button in the header.  
+   All page surfaces should switch to dark colors; the button label changes to
+   **Switch to light theme** and `aria-pressed` changes to `true`.
+10. Reload the page — the dark theme should persist (the preference is stored in
+    `localStorage`).
+11. Click the button again to return to light theme; reload to confirm it persists.
 
 ## Next steps
 

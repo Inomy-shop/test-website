@@ -1,3 +1,20 @@
+export function resolveInitialTheme({ stored, prefersDark }) {
+  if (stored === 'light' || stored === 'dark') return stored;
+  return prefersDark ? 'dark' : 'light';
+}
+
+export function nextTheme(current) {
+  return current === 'dark' ? 'light' : 'dark';
+}
+
+export function themeButtonLabel(current) {
+  return current === 'dark' ? 'Switch to light theme' : 'Switch to dark theme';
+}
+
+export function themeButtonPressed(current) {
+  return current === 'dark' ? 'true' : 'false';
+}
+
 export function clampScore(value) {
   const score = Number(value);
   if (!Number.isFinite(score)) return 0;
@@ -38,6 +55,28 @@ function bindReadinessWidget() {
   update();
 }
 
+function bindThemeToggle() {
+  const toggle = document.querySelector('#theme-toggle');
+  if (!toggle) return;
+
+  let current = document.documentElement.dataset.theme || 'light';
+  toggle.textContent = themeButtonLabel(current);
+  toggle.setAttribute('aria-pressed', themeButtonPressed(current));
+
+  toggle.addEventListener('click', () => {
+    current = nextTheme(current);
+    document.documentElement.dataset.theme = current;
+    toggle.textContent = themeButtonLabel(current);
+    toggle.setAttribute('aria-pressed', themeButtonPressed(current));
+    try {
+      localStorage.setItem('tw-theme', current);
+    } catch {
+      console.warn('theme persistence unavailable');
+    }
+  });
+}
+
 if (typeof document !== 'undefined') {
   bindReadinessWidget();
+  bindThemeToggle();
 }
