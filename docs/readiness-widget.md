@@ -14,7 +14,8 @@ This document is the complete reference for the three exported helper functions 
 | Clamped score | Message | CSS class |
 | --- | --- | --- |
 | 80–100 | `Ready for onboarding.` | `ready` |
-| 50–79 | `Almost ready. Review the remaining setup.` | `warning` |
+| 50 | `Right on the edge — one more check to be ready.` | `warning` |
+| 51–79 | `Almost ready. Review the remaining setup.` | `warning` |
 | 0–49 | `Needs attention before the first workflow.` | `warning` |
 
 Scores are clamped and rounded before any threshold comparison (see
@@ -67,7 +68,8 @@ are safe to pass directly.
 | Condition | Return value |
 | --- | --- |
 | `clampScore(score) >= 80` | `'Ready for onboarding.'` |
-| `clampScore(score) >= 50` | `'Almost ready. Review the remaining setup.'` |
+| `clampScore(score) === 50` | `'Right on the edge — one more check to be ready.'` |
+| `clampScore(score) >= 50` (i.e. 51–79) | `'Almost ready. Review the remaining setup.'` |
 | `clampScore(score) < 50` | `'Needs attention before the first workflow.'` |
 
 **Examples:**
@@ -75,6 +77,7 @@ are safe to pass directly.
 ```js
 readinessMessage(90)   // 'Ready for onboarding.'
 readinessMessage(65)   // 'Almost ready. Review the remaining setup.'
+readinessMessage(50)   // 'Right on the edge — one more check to be ready.'
 readinessMessage(12)   // 'Needs attention before the first workflow.'
 readinessMessage(150)  // 'Ready for onboarding.'   (clamped to 100)
 readinessMessage(-10)  // 'Needs attention before the first workflow.'  (clamped to 0)
@@ -157,6 +160,7 @@ To adjust the scoring bands, edit the conditionals in `src/app.js`:
 export function readinessMessage(score) {
   const clamped = clampScore(score);
   if (clamped >= 80) return 'Ready for onboarding.';
+  if (clamped === 50) return 'Right on the edge — one more check to be ready.';
   if (clamped >= 50) return 'Almost ready. Review the remaining setup.';
   return 'Needs attention before the first workflow.';
 }
