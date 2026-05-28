@@ -55,6 +55,15 @@ users a realistic onboarding flow without risking important code.
 - `src/app.js`: readiness score helper functions and widget behavior.
 - `src/app.test.mjs`: lightweight Node tests for the helper functions.
 
+## Documentation
+
+| Document | What it covers |
+| --- | --- |
+| [Getting Started](docs/getting-started.md) | Install, run the dev server, run tests, build, and manual functional checks |
+| [Readiness Widget](docs/readiness-widget.md) | Full API reference for `clampScore`, `readinessMessage`, `readinessClass`, DOM behavior, threshold table, and CSS classes |
+| [Development Guide](docs/development.md) | Common edits (text, cards, colors, thresholds), validation commands, writing tests, and troubleshooting |
+| [Architecture](docs/architecture.md) | Project structure, runtime flow diagram, module design rationale, testing approach, and dependency notes |
+
 ## Easy Changes To Try
 
 - Change the headline or supporting text in `index.html`.
