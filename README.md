@@ -9,7 +9,7 @@ one interactive widget, and a fast test command.
 This repo renders a simple landing page for a fake "Test Website" product. The
 page has four main parts:
 
-- A header with navigation links.
+- A header with navigation links and a light/dark theme toggle button.
 - A hero section that explains the repo is an Allen onboarding target.
 - A feature section with cards describing why the repo is easy to test.
 - A readiness score widget where users type a number from `0` to `100` and get
@@ -50,10 +50,16 @@ users a realistic onboarding flow without risking important code.
 
 ## What Is Inside
 
-- `index.html`: the single-page website.
-- `src/styles.css`: responsive styling for the page.
-- `src/app.js`: readiness score helper functions and widget behavior.
-- `src/app.test.mjs`: lightweight Node tests for the helper functions.
+- `index.html`: the single-page website, including the `#theme-toggle` button in
+  the header.
+- `src/styles.css`: responsive styling for the page. Defines CSS custom
+  properties (design tokens) for the light theme in `:root` and overrides them
+  for dark mode in the `[data-theme="dark"]` block.
+- `src/app.js`: readiness score helper functions and widget behavior, plus theme
+  management — reading and writing the `tw.theme` localStorage key, detecting
+  the OS color-scheme preference, and wiring the header toggle button.
+- `src/app.test.mjs`: lightweight Node tests for the helper functions, covering
+  both the readiness widget and all theme helper functions.
 
 ## Documentation
 
@@ -92,6 +98,12 @@ npm test
 3. Enter a score below `80` and click `Update`.
 4. Confirm the message changes to a warning state.
 5. Enter `80` or higher and confirm it changes back to ready.
+6. Click the 🌙 toggle button in the header and confirm the page switches to the
+   dark theme without reloading.
+7. Reload the page and confirm the dark theme is still applied (preference is
+   persisted in `localStorage`).
+8. Clear `localStorage` (`localStorage.clear()` in the browser console), reload,
+   and confirm the site follows the OS color-scheme preference.
 
 ## Example Allen Test Prompts
 
@@ -111,6 +123,10 @@ Improve the README with setup, test, and manual QA instructions for a new user.
 
 ```text
 The score input should clamp decimal values consistently. Review the current behavior, update it if needed, and make sure tests cover it.
+```
+
+```text
+The theme toggle label changes between "Switch to dark theme" and "Switch to light theme" depending on the current mode. Review the toggle behavior, update the label text if needed, and add tests.
 ```
 
 ## Expected Test Result
